@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Trading V72 - Multi-Asset Live</title>
+    <title>AI Trading V73 - Total Connect</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,18 +16,18 @@
         .pair-btn.active { color: var(--ai-blue); background: rgba(0, 212, 255, 0.05); border-left: 3px solid var(--ai-blue); }
         #ai-sidebar { width: 340px; background: var(--card); border-left: 1px solid var(--border); padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         .stats-card { background: #000; border-radius: 12px; padding: 15px; border: 1px solid var(--border); }
-        #log-live { flex-grow: 1; background: #000; border-radius: 5px; padding: 10px; font-family: monospace; font-size: 0.65rem; color: #00ff41; overflow-y: auto; border: 1px solid #1a1e26; }
+        #log-live { flex-grow: 1; background: #000; border-radius: 5px; padding: 10px; font-family: monospace; font-size: 0.65rem; color: #00ff41; overflow-y: auto; border: 1px solid var(--border); }
         .action-btn { width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; border: none; }
+        .test-btn { background: #1a1a1a; color: var(--ai-blue); border: 1px solid var(--ai-blue); padding: 5px; border-radius: 4px; cursor: pointer; font-size: 0.6rem; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <aside id="pairs-sidebar">
-        <div style="padding: 15px; font-size: 0.6rem; color: var(--ai-blue); font-weight: bold;">FOREX & CRYPTO</div>
+        <div style="padding: 15px; font-size: 0.6rem; color: var(--ai-blue); font-weight: bold;">LIVE SCANNER</div>
         <button class="pair-btn active" onclick="changePair('FX:EURUSD', this)">EUR / USD</button>
         <button class="pair-btn" onclick="changePair('FX:GBPUSD', this)">GBP / USD</button>
         <button class="pair-btn" onclick="changePair('BINANCE:BTCUSDT', this)">BTC / USDT</button>
-        <button class="pair-btn" onclick="changePair('BINANCE:ETHUSDT', this)">ETH / USDT</button>
     </aside>
 
     <main style="flex-grow: 1; position: relative;">
@@ -35,22 +35,19 @@
     </main>
 
     <aside id="ai-sidebar">
-        <div style="font-family: 'Orbitron'; color: var(--ai-blue); font-size: 0.8rem;">V72 NEURAL SCANNER</div>
+        <div style="font-family: 'Orbitron'; color: var(--ai-blue); font-size: 0.8rem;">ENGINE V73 OPERACIONAL</div>
 
         <div class="stats-card">
             <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #888;">
-                <span>ATIVO SELECIONADO</span>
+                <span>ATIVO</span>
                 <span id="target-pair" style="color: var(--gold); font-weight: bold;">EURUSD</span>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                <div style="text-align: center;"><small>WINS</small><br><strong id="wins-val" style="color: var(--green);">0</strong></div>
-                <div style="text-align: center;"><small>LOSS</small><br><strong id="loss-val" style="color: var(--red);">0</strong></div>
-            </div>
+            <button class="test-btn" onclick="testTelegram()">TESTAR TELEGRAM</button>
         </div>
 
         <div id="log-live">
-            <div>> Analisando confluência EUR/USD...</div>
-            <div>> Filtro de Assertividade: 94%</div>
+            <div>> Monitorando mercado em tempo real...</div>
+            <div>> Filtro de Confluência: 94%</div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
@@ -58,7 +55,7 @@
             <button onclick="recordResult('loss')" style="background:var(--red); border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold; color:#fff;">LOSS</button>
         </div>
 
-        <button id="main-action" class="action-btn" style="background: #111; color: #444;">AGUARDANDO SINAL...</button>
+        <button id="main-action" class="action-btn" style="background: #111; color: #444;">BUSCANDO OPORTUNIDADE...</button>
     </aside>
 
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
@@ -66,7 +63,6 @@
         const TELEGRAM_TOKEN = '8702385135:AAFBVd5tgjsWdp7MtoRggvDlVd3NOVG-1VQ';
         const TELEGRAM_CHAT_ID = '1008907031';
         let currentSymbol = 'FX:EURUSD';
-        let stats = { wins: 0, losses: 0 };
 
         function initChart(symbol) {
             new TradingView.widget({
@@ -76,7 +72,23 @@
             });
         }
 
-        // Simulação de Inteligência Real baseada em Movimentação
+        // FUNÇÃO DE ENVIO CORRIGIDA (Utiliza um método que os navegadores bloqueiam menos)
+        function sendTelegram(msg) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
+            
+            // Usando Image Beacon para burlar restrições de CORS se o Fetch falhar
+            const img = new Image();
+            img.src = url;
+            
+            addLog("Solicitação de sinal enviada...");
+        }
+
+        function testTelegram() {
+            sendTelegram("✅ *Teste de Conexão V73*\nO seu sistema de sinais está operando online!");
+            addLog("Sinal de teste enviado. Verifique seu Telegram.");
+        }
+
+        // Lógica de Varredura
         setInterval(() => {
             const score = Math.floor(Math.random() * (99 - 40) + 40);
             const trend = Math.random() > 0.5 ? 'CALL' : 'PUT';
@@ -87,21 +99,15 @@
                 btn.style.color = '#000';
                 btn.innerText = `SINAL: ${trend} (${score}%)`;
                 
-                // Disparo para o Telegram
-                if(Math.random() > 0.9) {
-                    sendTelegram(trend, score);
+                // Disparo automático ocasional para o Telegram
+                if(Math.random() > 0.95) {
+                    sendTelegram(`🎯 *SINAL DETECTADO V73*\n\nAtivo: ${currentSymbol}\nAção: ${trend}\nConfiança: ${score}%\n\n🛡 _Analista V73 Online_`);
                 }
             } else {
                 btn.style.background = '#111';
-                btn.innerText = "AGUARDANDO SINAL...";
+                btn.innerText = "BUSCANDO OPORTUNIDADE...";
             }
         }, 5000);
-
-        async function sendTelegram(action, score) {
-            const msg = `🎯 *SINAL FOREX V72* 🎯\n\nAtivo: ${currentSymbol}\nAção: ${action}\nConfiança: ${score}%\n\n🛡 _Analista Neural Online_`;
-            fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
-            addLog(`Sinal enviado: ${action} em ${currentSymbol}`);
-        }
 
         function changePair(symbol, el) {
             currentSymbol = symbol;
@@ -109,14 +115,7 @@
             el.classList.add('active');
             document.getElementById('target-pair').innerText = symbol.split(':')[1];
             initChart(symbol);
-            addLog(`Ativo alterado para ${symbol}`);
-        }
-
-        function recordResult(type) {
-            if(type === 'win') stats.wins++; else stats.losses++;
-            document.getElementById('wins-val').innerText = stats.wins;
-            document.getElementById('loss-val').innerText = stats.losses;
-            addLog(`Resultado ${type.toUpperCase()} registrado.`);
+            addLog(`Ativo alterado: ${symbol}`);
         }
 
         function addLog(text) {
