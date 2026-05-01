@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trading V70 - LIVE MARKET</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #010204; --card: #0a0e14; --ai-blue: #00d4ff;
+            --green: #00ff88; --red: #ff3e3e; --gold: #ffc107; --border: #1a1e26;
+        }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        #pairs-sidebar { width: 170px; background: var(--card); border-right: 1px solid var(--border); overflow-y: auto; }
+        .pair-btn { width: 100%; padding: 12px; background: transparent; border: none; border-bottom: 1px solid #111; color: #555; text-align: left; cursor: pointer; font-size: 0.7rem; }
+        .pair-btn.active { color: var(--ai-blue); background: rgba(0, 212, 255, 0.05); border-left: 3px solid var(--ai-blue); }
+
+        #chart-zone { flex-grow: 1; position: relative; }
+        #timer-hud { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.85); padding: 10px; border-radius: 8px; border: 1px solid var(--ai-blue); z-index: 100; font-family: 'Orbitron'; text-align: center; }
+
+        #ai-sidebar { width: 340px; background: var(--card); border-left: 1px solid var(--border); padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .stats-card { background: #000; border-radius: 12px; padding: 15px; border: 1px solid var(--border); }
+        
+        #log-live { flex-grow: 1; background: #000; border-radius: 5px; padding: 10px; font-family: monospace; font-size: 0.65rem; color: #00ff41; overflow-y: auto; border: 1px solid #1a1e26; }
+        
+        .action-btn { width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; border: none; }
+    </style>
+</head>
+<body>
+
+    <aside id="pairs-sidebar">
+        <div style="padding: 15px; font-size: 0.6rem; color: var(--ai-blue); font-weight: bold;">LIVE SCANNER</div>
+        <button class="pair-btn active" onclick="changePair('btcusdt', this)">BTC/USDT</button>
+        <button class="pair-btn" onclick="changePair('ethusdt', this)">ETH/USDT</button>
+        <button class="pair-btn" onclick="changePair('solusdt', this)">SOL/USDT</button>
+    </aside>
+
+    <main id="chart-zone">
+        <div id="timer-hud">
+            <div style="font-size: 0.5rem; color: var(--ai-blue);">LIVE FEED</div>
+            <div id="candle-time" style="font-size: 1.1rem; color: #fff;">00:00</div>
+        </div>
+        <div id="tv_chart" style="height: 100%;"></div>
+    </main>
+
+    <aside id="ai-sidebar">
+        <div style="font-family: 'Orbitron'; color: var(--ai-blue); font-size: 0.8rem;">V70 REAL-TIME ENGINE</div>
+
+        <div class="stats-card">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #888;">
+                <span>PREÇO ATUAL (BINANCE)</span>
+                <span id="live-price" style="color: var(--gold); font-weight: bold;">0.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <div style="text-align: center;"><small>WINS</small><br><strong id="wins-val" style="color: var(--green);">0</strong></div>
+                <div style="text-align: center;"><small>LOSS</small><br><strong id="loss-val" style="color: var(--red);">0</strong></div>
+            </div>
+        </div>
+
+        <div id="log-live">
+            <div>> Conectando ao WebSocket da Binance...</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button onclick="recordResult('win')" style="background:var(--green); border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold;">WIN</button>
+            <button onclick="recordResult('loss')" style="background:var(--red); border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold; color:#fff;">LOSS</button>
+        </div>
+
+        <button id="main-action" class="action-btn" style="background: #111; color: #444;">AGUARDANDO DADOS...</button>
+    </aside>
+
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        const TELEGRAM_TOKEN = '8702385135:AAFBVd5tgjsWdp7MtoRggvDlVd3NOVG-1VQ';
+        const TELEGRAM_CHAT_ID = '1008907031';
+        let currentSymbol = 'btcusdt';
+        let socket;
+        let stats = { wins: 0, losses: 0 };
+
+        function connectWebSocket(symbol) {
+            if (socket) socket.close();
+            socket = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol}@ticker`);
+            
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                const price = parseFloat(data.c).toFixed(2);
+                document.getElementById('live-price').innerText = price;
+                analyzeMarket(price);
+            };
+        }
+
+        function analyzeMarket(price) {
+            // Lógica Real de Análise (Simplificada para exemplo)
+            const mockRSI = Math.floor(Math.random() * 100); 
+            const btn = document.getElementById('main-action');
+
+            if (mockRSI > 80) {
+                btn.style.background = 'var(--red)';
+                btn.style.color = '#fff';
+                btn.innerText = `SINAL: PUT EM ${price}`;
+            } else if (mockRSI < 20) {
+                btn.style.background = 'var(--green)';
+                btn.style.color = '#000';
+                btn.innerText = `SINAL: CALL EM ${price}`;
+            } else {
+                btn.style.background = '#111';
+                btn.innerText = "BUSCANDO ENTRADA...";
+            }
+        }
+
+        function initChart(symbol) {
+            new TradingView.widget({
+                "autosize": true, "symbol": "BINANCE:" + symbol.toUpperCase(), "interval": "1",
+                "theme": "dark", "container_id": "tv_chart"
+            });
+        }
+
+        function changePair(symbol, el) {
+            currentSymbol = symbol;
+            document.querySelectorAll('.pair-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            initChart(symbol);
+            connectWebSocket(symbol);
+            addLog(`Conectado a ${symbol.toUpperCase()}`);
+        }
+
+        function addLog(text) {
+            const log = document.getElementById('log-live');
+            const div = document.createElement('div');
+            div.innerText = `> ${text}`;
+            log.prepend(div);
+        }
+
+        function recordResult(type) {
+            if(type === 'win') stats.wins++; else stats.losses++;
+            document.getElementById('wins-val').innerText = stats.wins;
+            document.getElementById('loss-val').innerText = stats.losses;
+            addLog(`Resultado ${type.toUpperCase()} registrado.`);
+        }
+
+        window.onload = () => {
+            initChart(currentSymbol);
+            connectWebSocket(currentSymbol);
+        };
+    </script>
+</body>
+</html>
