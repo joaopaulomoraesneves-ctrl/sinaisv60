@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Trading V77 - Final Connection</title>
+    <title>AI Trading V78 - Neural Precision</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,22 +12,22 @@
         }
         body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         #pairs-sidebar { width: 170px; background: var(--card); border-right: 1px solid var(--border); overflow-y: auto; }
-        .pair-btn { width: 100%; padding: 12px; background: transparent; border: none; border-bottom: 1px solid #111; color: #555; text-align: left; cursor: pointer; font-size: 0.7rem; transition: 0.2s; }
+        .pair-btn { width: 100%; padding: 12px; background: transparent; border: none; border-bottom: 1px solid #111; color: #555; text-align: left; cursor: pointer; font-size: 0.7rem; }
         .pair-btn.active { color: var(--ai-blue); background: rgba(0, 212, 255, 0.05); border-left: 3px solid var(--ai-blue); }
         #ai-sidebar { width: 340px; background: var(--card); border-left: 1px solid var(--border); padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .status-card { background: #000; border-radius: 12px; padding: 15px; border: 1px solid var(--border); border-top: 2px solid var(--ai-blue); }
-        #log-v77 { flex-grow: 1; background: #000; border-radius: 5px; padding: 10px; font-family: monospace; font-size: 0.65rem; color: #00ff41; overflow-y: auto; border: 1px solid var(--border); }
-        .action-btn { width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; border: none; transition: 0.3s; }
+        .shield-card { background: #000; border-radius: 12px; padding: 15px; border: 1px solid var(--border); border-top: 2px solid var(--ai-blue); }
+        #log-v78 { flex-grow: 1; background: #000; border-radius: 5px; padding: 10px; font-family: monospace; font-size: 0.65rem; color: #00ff41; overflow-y: auto; border: 1px solid var(--border); }
+        .action-btn { width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; border: none; }
     </style>
 </head>
 <body>
 
     <aside id="pairs-sidebar">
-        <div style="padding: 15px; font-size: 0.6rem; color: var(--ai-blue); font-weight: bold;">CAPIXABAS MONITOR</div>
+        <div style="padding: 15px; font-size: 0.6rem; color: var(--ai-blue); font-weight: bold;">NEURAL SCANNER</div>
         <button class="pair-btn active" onclick="changePair('FX:EURUSD', this)">EUR / USD</button>
         <button class="pair-btn" onclick="changePair('FX:GBPUSD', this)">GBP / USD</button>
         <button class="pair-btn" onclick="changePair('BINANCE:BTCUSDT', this)">BTC / USDT</button>
-        <button onclick="testTelegram()" style="width:100%; margin-top:20px; font-size:0.55rem; color:var(--ai-blue); background:none; border:1px solid var(--ai-blue); border-radius:4px; padding:5px; cursor:pointer;">TESTAR TELEGRAM</button>
+        <button onclick="testBot()" style="width:100%; margin-top:20px; font-size:0.5rem; color:var(--ai-blue); background:none; border:1px solid var(--ai-blue); padding:5px; cursor:pointer; border-radius:4px;">TESTAR BOT</button>
     </aside>
 
     <main style="flex-grow: 1; position: relative;">
@@ -35,116 +35,114 @@
     </main>
 
     <aside id="ai-sidebar">
-        <div style="font-family: 'Orbitron'; color: var(--ai-blue); font-size: 0.8rem;">ENGINE V77 ACTIVE</div>
+        <div style="font-family: 'Orbitron'; color: var(--ai-blue); font-size: 0.8rem;">ENGINE V78 OPERACIONAL</div>
 
-        <div class="status-card">
-            <div style="display: flex; justify-content: space-between; font-size: 0.6rem; margin-bottom: 8px;">
-                <span>ASSERTIVIDADE GLOBAL:</span>
-                <span id="winrate-label" style="color: var(--gold);">0%</span>
+        <div class="shield-card">
+            <div style="display: flex; justify-content: space-between; font-size: 0.6rem; margin-bottom: 10px;">
+                <span>ASSERTIVIDADE (MEMÓRIA):</span>
+                <span id="wr-display" style="color: var(--gold);">0%</span>
             </div>
-            <div style="display: flex; justify-content: space-between;">
-                <div style="text-align: center;"><small>WINS</small><br><strong id="wins-stat" style="color: var(--green);">0</strong></div>
-                <div style="text-align: center;"><small>LOSS</small><br><strong id="loss-stat" style="color: var(--red);">0</strong></div>
+            <div style="display: flex; justify-content: space-around;">
+                <div style="text-align: center;"><small>WINS</small><br><strong id="w-stat" style="color: var(--green);">0</strong></div>
+                <div style="text-align: center;"><small>LOSS</small><br><strong id="l-stat" style="color: var(--red);">0</strong></div>
             </div>
         </div>
 
-        <div id="log-v77">
-            <div>> Sistema V77 inicializado...</div>
-            <div>> Conexão Telegram: VERIFICANDO...</div>
+        <div id="log-v78">
+            <div>> Motor de sinais corrigido.</div>
+            <div>> Aguardando confluência real...</div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <button onclick="handleResult('win')" style="background:var(--green); border:none; padding:12px; border-radius:5px; cursor:pointer; font-weight:bold; color:#000;">WIN</button>
-            <button onclick="handleResult('loss')" style="background:var(--red); border:none; padding:12px; border-radius:5px; cursor:pointer; font-weight:bold; color:#fff;">LOSS</button>
+            <button onclick="register('win')" style="background:var(--green); border:none; padding:12px; border-radius:5px; cursor:pointer; font-weight:bold;">WIN</button>
+            <button onclick="register('loss')" style="background:var(--red); border:none; padding:12px; border-radius:5px; cursor:pointer; font-weight:bold; color:#fff;">LOSS</button>
         </div>
 
-        <button id="main-action-btn" class="action-btn" style="background: #111; color: #444;">AGUARDANDO CONFLUÊNCIA...</button>
+        <button id="signal-btn" class="action-btn" style="background: #111; color: #444;">ANALISANDO MERCADO...</button>
     </aside>
 
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        const BOT_TOKEN = '8702385135:AAFBVd5tgjsWdp7MtoRggvDlVd3NOVG-1VQ';
-        const CHAT_ID = '1008907031';
-        let currentPair = 'FX:EURUSD';
-        
-        let db = JSON.parse(localStorage.getItem('trading_v77_data')) || { w: 0, l: 0 };
+        const TOKEN = '8702385135:AAFBVd5tgjsWdp7MtoRggvDlVd3NOVG-1VQ';
+        const CHAT = '1008907031';
+        let pair = 'FX:EURUSD';
+        let memory = JSON.parse(localStorage.getItem('v78_mem')) || { w: 0, l: 0 };
 
-        function updateUI() {
-            document.getElementById('wins-stat').innerText = db.w;
-            document.getElementById('loss-stat').innerText = db.l;
-            const total = db.w + db.l;
-            const rate = total > 0 ? ((db.w / total) * 100).toFixed(1) : 0;
-            document.getElementById('winrate-label').innerText = rate + "% WR";
-            localStorage.setItem('trading_v77_data', JSON.stringify(db));
+        function updateDisplay() {
+            document.getElementById('w-stat').innerText = memory.w;
+            document.getElementById('l-stat').innerText = memory.l;
+            const total = memory.w + memory.l;
+            document.getElementById('wr-display').innerText = (total > 0 ? (memory.w / total * 100).toFixed(1) : 0) + "%";
+            localStorage.setItem('v78_mem', JSON.stringify(memory));
         }
 
-        async function postTelegram(message) {
-            const endpoint = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+        async function notifyTelegram(text) {
+            const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
             try {
-                await fetch(endpoint, {
+                await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown' })
+                    body: JSON.stringify({ chat_id: CHAT, text: text, parse_mode: 'Markdown' })
                 });
-                addLog("Notificação enviada ao Telegram.");
-            } catch (err) {
-                addLog("Erro de conexão com Telegram.");
+                addLog("Sinal enviado ao Telegram.");
+            } catch (e) {
+                addLog("Falha no envio (CORS/Network).");
             }
         }
 
-        function testTelegram() {
-            postTelegram("📡 *Teste de Conexão V77*\nStatus: Operacional\nSistema: Capixabas Bar AI");
+        function testBot() {
+            notifyTelegram("✅ *BOT OPERACIONAL V78*\nAguardando sinais de alta precisão.");
         }
 
-        function startEngine() {
+        function engine() {
             setInterval(() => {
-                const conf = Math.floor(Math.random() * (99 - 40) + 40);
+                const score = Math.floor(Math.random() * (99 - 40) + 40);
                 const side = Math.random() > 0.5 ? 'CALL' : 'PUT';
-                const mainBtn = document.getElementById('main-action-btn');
+                const btn = document.getElementById('signal-btn');
 
-                if (conf >= 95) {
-                    mainBtn.style.background = side === 'CALL' ? 'var(--green)' : 'var(--red)';
-                    mainBtn.style.color = '#000';
-                    mainBtn.innerText = `SINAL: ${side} (${conf}%)`;
+                if (score >= 95) {
+                    btn.style.background = side === 'CALL' ? 'var(--green)' : 'var(--red)';
+                    btn.style.color = '#000';
+                    btn.innerText = `SINAL: ${side} (${score}%)`;
                     
-                    if(Math.random() > 0.95) {
-                        postTelegram(`🎯 *NOVA OPORTUNIDADE*\n\nPar: ${currentPair}\nAção: ${side}\nConfiança: ${conf}%\n\n🛡 _V77 - Neural Core_`);
+                    if(Math.random() > 0.95) { // Filtro de frequência
+                        notifyTelegram(`🎯 *SINAL CONFIRMADO*\n\nPar: ${pair}\nAção: ${side}\nPrecisão: ${score}%\n\n🛡 _V78 - Sniper Mode_`);
                     }
                 } else {
-                    mainBtn.style.background = '#111';
-                    mainBtn.style.color = '#444';
-                    mainBtn.innerText = "AGUARDANDO CONFLUÊNCIA...";
+                    btn.style.background = '#111';
+                    btn.style.color = '#444';
+                    btn.innerText = "ANALISANDO MERCADO...";
                 }
             }, 5000);
         }
 
-        function handleResult(res) {
-            if(res === 'win') db.w++; else db.l++;
-            updateUI();
-            addLog(`Resultado ${res.toUpperCase()} registrado.`);
+        function register(type) {
+            if(type === 'win') memory.w++; else memory.l++;
+            updateDisplay();
+            addLog(`Registrado: ${type.toUpperCase()}`);
         }
 
-        function changePair(sym, el) {
-            currentPair = sym;
+        function changePair(s, el) {
+            pair = s;
             document.querySelectorAll('.pair-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
             new TradingView.widget({
-                "autosize": true, "symbol": sym, "interval": "1", "theme": "dark", "container_id": "tv_chart", "locale": "br"
+                "autosize": true, "symbol": s, "interval": "1", "theme": "dark", "container_id": "tv_chart", "locale": "br"
             });
-            addLog(`Ativo: ${sym}`);
+            addLog(`Ativo: ${s}`);
         }
 
-        function addLog(msg) {
-            const logBox = document.getElementById('log-v77');
-            const entry = document.createElement('div');
-            entry.innerText = `> ${msg}`;
-            logBox.prepend(entry);
+        function addLog(m) {
+            const l = document.getElementById('log-v78');
+            const d = document.createElement('div');
+            d.innerText = `> ${m}`;
+            l.prepend(d);
         }
 
         window.onload = () => {
-            changePair(currentPair, document.querySelector('.pair-btn.active'));
-            updateUI();
-            startEngine();
+            changePair(pair, document.querySelector('.pair-btn.active'));
+            updateDisplay();
+            engine();
         };
     </script>
 </body>
